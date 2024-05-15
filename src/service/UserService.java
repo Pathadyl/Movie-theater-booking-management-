@@ -20,8 +20,8 @@ public abstract class UserService {
         theaterDao = new TheaterDao();
     }
 
-    public List<Movie> getAllMovie() {
-        return movieDao.getAllMovies(user.getRole());
+    public List<Movie> getAllMovie(boolean available) {
+        return movieDao.getAllMovies(user.getRole(), available);
     }
 
     public List<Movie> searchMovieByTitle(String title, Role role) {
@@ -32,12 +32,12 @@ public abstract class UserService {
         return theaterDao.searchTheaterByName(name, role);
     }
 
-    public List<Movie> getMovieListByGenre(String genre, Role role){
-        return movieDao.getMovieListByGenre(genre, role);
+    public List<Movie> getMovieListByGenre(String genre, boolean available){
+        return movieDao.getMovieListByGenre(genre, available, user.getRole());
     }
 
-    public List<Movie> getMovieListByTheater(Theater theater, Role role) {
-        return movieDao.getMovieListByTheater(theater.getId(), role);
+    public List<Movie> getMovieListByTheater(Theater theater) {
+        return movieDao.getMovieListByTheater(theater.getId(), user.getRole());
     }
 
     public Movie getMovieInfo(Movie movie) {

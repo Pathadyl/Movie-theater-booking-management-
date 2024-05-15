@@ -162,6 +162,8 @@ public class RectangleButtonWithPressEffect extends JButton {
         }
         g2.dispose();
         g.drawImage(img, 0, 0, null);
+        
+//        drawMultilineText(g);
         super.paintComponent(g);
     }
 
@@ -179,6 +181,26 @@ public class RectangleButtonWithPressEffect extends JButton {
         float y = (pressedLocation.y - (pressedSize/2));
         g2.fillOval((int) x, (int) y, (int) pressedSize, (int) pressedSize);
     }
+    
+//    private void drawMultilineText(Graphics g) {
+//        String text = getText();
+//        if (text != null && !text.isEmpty()) {
+//            Graphics2D g2d = (Graphics2D) g;
+//            g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+//            g2d.setFont(getFont());
+//            g2d.setColor(getForeground());
+//            Font font = g2d.getFontMetrics().getFont();
+//            int lineHeight = g2d.getFontMetrics(font).getHeight();
+//            int y = getHeight() / 2 - lineHeight; // Adjust to vertically center the text
+//
+//            String[] lines = text.split("\n");
+//            for (String line : lines) {
+//                int x = getInsets().left;
+//                y += lineHeight;
+//                g2d.drawString(line, x, y);
+//            }
+//        }
+//    }
     
     private static class TopBottomBorder implements Border {
         @Override

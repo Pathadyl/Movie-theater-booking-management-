@@ -3,20 +3,20 @@ package view;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.util.List;
-import javax.swing.ImageIcon;
 import model.Guest;
 import model.Movie;
 import model.Role;
 import service.GuestService;
 import service.UserService;
 import view.component.Form_Movie;
-import view.customSwing.PicturePoster;
+import view.customSwing.switchbutton.SwitchListener;
 
 public class CustomerFrame extends javax.swing.JFrame {
     
     private CardLayout cardLayout;
     private UserService userService;
     private boolean movieAvailable = true;
+    private String genre = "All";
     private List<Movie> movies;
     
     
@@ -26,23 +26,37 @@ public class CustomerFrame extends javax.swing.JFrame {
         setSize(1280, 700);
         setLocationRelativeTo(null);
         
-        userService = new GuestService(new Guest());
-        cardLayout = (CardLayout) cardLayoutCustomerPanel.getLayout();
-        
         homeButton.setShowBorder(false);
         theaterButton.setShowBorder(false);
         storeButton.setShowBorder(false);
         personalButton.setShowBorder(false);
         binButton.setShowBorder(false);
         
-        init();
+        
+        userService = new GuestService(new Guest());
+        cardLayout = (CardLayout) cardLayoutCustomerPanel.getLayout();
+        
+        switchAvailableButton.addEventSwitchSelected(new SwitchListener() {
+            @Override
+            public void selectChange(boolean on){
+                movieAvailable = on;
+                setMovieList();
+            }
+        });
+        
+        setMovieList();
     }
     
-    private void init() {
-        movies = userService.getAllMovie();
-        for(Movie movie : movies){
-            movieList.addFormMovie(new Form_Movie(movie));
+    private void setMovieList() {
+        if(genre.equals("All")) {
+            movies = userService.getAllMovie(movieAvailable);
+        } else {
+            movies = userService.getMovieListByGenre(genre, movieAvailable);
         }
+        movieList.resetMovieList();
+        for(Movie movie : movies)
+                movieList.addFormMovie(new Form_Movie(movie));
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -59,6 +73,8 @@ public class CustomerFrame extends javax.swing.JFrame {
         homePanel = new view.Panel.HomePanel();
         headerHomePanel = new view.customSwing.CustomHeader();
         movieList = new view.component.MovieList();
+        switchAvailableButton = new view.customSwing.switchbutton.SwitchButton();
+        genreComboBox = new view.customSwing.CustomComboBox();
         storePanel = new view.Panel.StorePanel();
         loginPanel = new view.Panel.LoginPanel();
         customHeader1 = new view.customSwing.CustomHeader();
@@ -164,23 +180,54 @@ public class CustomerFrame extends javax.swing.JFrame {
             .addGap(0, 90, Short.MAX_VALUE)
         );
 
+        switchAvailableButton.setForeground(new java.awt.Color(255, 255, 255));
+        switchAvailableButton.setBorderSize(1);
+        switchAvailableButton.setDisableColor(new java.awt.Color(153, 153, 153));
+        switchAvailableButton.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        switchAvailableButton.setSwitchColor(new java.awt.Color(58, 181, 75));
+        switchAvailableButton.setSwitchOffColor(new java.awt.Color(58, 181, 75));
+
+        genreComboBox.setBackground(new java.awt.Color(0, 0, 0));
+        genreComboBox.setForeground(new java.awt.Color(255, 255, 255));
+        genreComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All", "Action", "Animation", "Science Fiction", "History", "Comedy" }));
+        genreComboBox.setSelectedIndex(-1);
+        genreComboBox.setFocusable(false);
+        genreComboBox.setLabeText("Genre");
+        genreComboBox.setLineColor(new java.awt.Color(102, 255, 102));
+        genreComboBox.setName(""); // NOI18N
+        genreComboBox.setRequestFocusEnabled(false);
+        genreComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                genreComboBoxActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout homePanelLayout = new javax.swing.GroupLayout(homePanel);
         homePanel.setLayout(homePanelLayout);
         homePanelLayout.setHorizontalGroup(
             homePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(headerHomePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(homePanelLayout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(genreComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(288, 288, 288)
+                .addComponent(switchAvailableButton, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(507, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, homePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(movieList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(movieList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         homePanelLayout.setVerticalGroup(
             homePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(homePanelLayout.createSequentialGroup()
                 .addComponent(headerHomePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(homePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(switchAvailableButton, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                    .addComponent(genreComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
                 .addComponent(movieList, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24))
+                .addGap(15, 15, 15))
         );
 
         cardLayoutCustomerPanel.add(homePanel, "homePagePanel");
@@ -193,7 +240,7 @@ public class CustomerFrame extends javax.swing.JFrame {
         );
         storePanelLayout.setVerticalGroup(
             storePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 600, Short.MAX_VALUE)
+            .addGap(0, 606, Short.MAX_VALUE)
         );
 
         cardLayoutCustomerPanel.add(storePanel, "storePagePanel");
@@ -315,12 +362,12 @@ public class CustomerFrame extends javax.swing.JFrame {
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(registerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(102, Short.MAX_VALUE))
+                .addContainerGap(108, Short.MAX_VALUE))
             .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(loginPanelLayout.createSequentialGroup()
                     .addGap(149, 149, 149)
                     .addComponent(userNameJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(405, Short.MAX_VALUE)))
+                    .addContainerGap(411, Short.MAX_VALUE)))
         );
 
         cardLayoutCustomerPanel.add(loginPanel, "loginPagePanel");
@@ -484,6 +531,11 @@ public class CustomerFrame extends javax.swing.JFrame {
         
     }//GEN-LAST:event_loginButtonActionPerformed
 
+    private void genreComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_genreComboBoxActionPerformed
+        genre = (String) genreComboBox.getSelectedItem();
+        setMovieList();
+    }//GEN-LAST:event_genreComboBoxActionPerformed
+
     public static void main(String args[]) {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -501,6 +553,7 @@ public class CustomerFrame extends javax.swing.JFrame {
     private view.customSwing.CustomHeader customHeader1;
     private view.customSwing.CustomHeader customHeader2;
     private view.component.personalMenuButton detailButton;
+    private view.customSwing.CustomComboBox genreComboBox;
     private view.customSwing.CustomHeader headerHomePanel;
     private javax.swing.JLabel headerLabel;
     private javax.swing.JLabel headerLabel1;
@@ -522,6 +575,7 @@ public class CustomerFrame extends javax.swing.JFrame {
     private view.customSwing.CustomButtonWithPressEffect registerButton;
     private view.component.MenuButton storeButton;
     private view.Panel.StorePanel storePanel;
+    private view.customSwing.switchbutton.SwitchButton switchAvailableButton;
     private view.component.MenuButton theaterButton;
     private view.component.personalMenuButton updateButton;
     private javax.swing.JLabel userNameCationLabel;

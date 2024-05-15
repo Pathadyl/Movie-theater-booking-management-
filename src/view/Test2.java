@@ -17,6 +17,7 @@ public class Test2 extends javax.swing.JFrame {
     public Test2() {
         initComponents();
         init();
+        testButton.setText("BHD Star 3.2\nLau S, Sieu thi Vincom 3/2, 3C Duong 3/2, Quan 10, TPHCM");
     }
 
     private void init(){
@@ -28,31 +29,29 @@ public class Test2 extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        rectangleButtonWithPressEffect1 = new view.customSwing.RectangleButtonWithPressEffect();
+        testButton = new view.customSwing.TestButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        rectangleButtonWithPressEffect1.setText("Testing");
-        rectangleButtonWithPressEffect1.setBorderPainted(false);
-        rectangleButtonWithPressEffect1.setFocusable(true);
-        rectangleButtonWithPressEffect1.setPaintedColor(new java.awt.Color(0, 0, 0));
-        rectangleButtonWithPressEffect1.setSizeSpeed(10.0F);
+        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
+
+        testButton.setBorderPainted(false);
+        testButton.setPaintedColor(new java.awt.Color(0, 0, 0));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(181, 181, 181)
-                .addComponent(rectangleButtonWithPressEffect1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(226, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 140, Short.MAX_VALUE)
+                .addComponent(testButton, javax.swing.GroupLayout.PREFERRED_SIZE, 512, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(142, 142, 142)
-                .addComponent(rectangleButtonWithPressEffect1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(130, Short.MAX_VALUE))
+                .addGap(131, 131, 131)
+                .addComponent(testButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(152, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -107,6 +106,6 @@ public class Test2 extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
-    private view.customSwing.RectangleButtonWithPressEffect rectangleButtonWithPressEffect1;
+    private view.customSwing.TestButton testButton;
     // End of variables declaration//GEN-END:variables
 }

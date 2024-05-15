@@ -13,7 +13,7 @@ public class Application {
         ShowtimeDao showTimeDao = new ShowtimeDao();
 
 
-        List<Movie> movies = movieDao.getAllMovies(Role.MEMBER);
+        List<Movie> movies = movieDao.getAllMovies(Role.MEMBER, false);
         for(Movie movie : movies) {
             System.out.println(movie.getId() + ". " + movie.getTitle());
         }

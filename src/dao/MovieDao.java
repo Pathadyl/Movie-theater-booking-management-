@@ -52,20 +52,21 @@ public class MovieDao {
         return movie;
     }
 
-    public List<Movie> getAllMovies(Role role) {
+    public List<Movie> getAllMovies(Role role, boolean available) {
         List<Movie> movies = new ArrayList<>();
 
         Connection connection = JDBCConnection.getJDBCConnection();
 
-        String sql = "SELECT * FROM movie";
+        String sql = "SELECT * FROM movie WHERE availability = ?";
         if (role != Role.ADMIN)
-            sql += " WHERE visibility = ?";
+            sql += " AND visibility = ?";
         
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql,
                                                                                ResultSet.TYPE_SCROLL_INSENSITIVE,
                                                                                ResultSet.CONCUR_READ_ONLY)) {
+            preparedStatement.setBoolean(1, available);
             if (role != Role.ADMIN)
-                preparedStatement.setBoolean(1, true);   
+                preparedStatement.setBoolean(2, true);
             
             ResultSet rs = preparedStatement.executeQuery();
 
@@ -133,13 +134,15 @@ public class MovieDao {
         return movies;
     }
 
-    public List<Movie> getMovieListByGenre(String g, Role role) {
+    public List<Movie> getMovieListByGenre(String g, boolean available, Role role) {
         List<Movie> movies = new ArrayList<>();
 
         Connection connection = JDBCConnection.getJDBCConnection();
 
-        String sql = "SELECT * FROM movie " +
-                "WHERE genre = ?";
+        String sql = "SELECT * FROM movie" +
+                     " WHERE genre = ?" +
+                     " AND availability = ?";
+
         if (role != Role.ADMIN)
             sql += " AND visibility = ?";
 
@@ -147,8 +150,9 @@ public class MovieDao {
                                                                                ResultSet.TYPE_SCROLL_INSENSITIVE,
                                                                                ResultSet.CONCUR_READ_ONLY)) {
             preparedStatement.setString(1, g);
+            preparedStatement.setBoolean(2, available);
             if (role != Role.ADMIN)
-                preparedStatement.setBoolean(2, true);
+                preparedStatement.setBoolean(3, true);
 
             String actualSql = preparedStatement.toString().split(": ")[1];
             ResultSet rs = preparedStatement.executeQuery();
