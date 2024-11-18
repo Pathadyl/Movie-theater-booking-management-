@@ -1,21 +1,20 @@
 package model;
 
-import java.sql.Date;
-import java.sql.Time;
+import java.sql.Timestamp;
 
 public class Showtime {
     private int id;
-    private Date date;
-    private Time startTime;
-    private Time endTime;
+    private int movie_id;
+    private int theater_id;
+    private Timestamp showTime;
     private int seats;
     private int available;
 
-    public Showtime(int id, Date date, Time startTime, Time endTime, int seats, int available) {
+    public Showtime(int id, int movie_id, int theater_id, Timestamp showTime, int seats, int available) {
         this.id = id;
-        this.date = date;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.movie_id = movie_id;
+        this.theater_id = theater_id;
+        this.showTime = showTime;
         this.seats = seats;
         this.available = available;
     }
@@ -24,43 +23,31 @@ public class Showtime {
         return id;
     }
 
-    public Date getDate() {
-        return date;
+    public int getMovie_id() {
+        return movie_id;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public int getTheater_id() {
+        return theater_id;
     }
 
-    public Time getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Time startTime) {
-        this.startTime = startTime;
-    }
-
-    public Time getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Time endTime) {
-        this.endTime = endTime;
+    public Timestamp getShowTime() {
+        return showTime;
     }
 
     public int getSeats() {
         return seats;
     }
 
-    public void setSeats(int seats) {
-        this.seats = seats;
-    }
-
     public int getAvailable() {
         return available;
     }
 
-    public void setAvailable(int available) {
-        this.available = available;
-    }
+    
+    
+    
+    
+    
+
+
 }

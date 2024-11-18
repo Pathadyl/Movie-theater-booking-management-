@@ -5,18 +5,18 @@ import model.Member;
 import java.sql.*;
 
 public class MemberDao {
-    public Member getAuthenticated(String userName, String password) {
+    public Member findByUsername(String userName) {
         Connection connection = JDBCConnection.getJDBCConnection();
         Member member = null;
 
         String sql = "SELECT * FROM member " +
-                "WHERE user_name = ? AND password = ?";
+                "WHERE user_name = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql,
                                                                                ResultSet.TYPE_SCROLL_INSENSITIVE,
                                                                                ResultSet.CONCUR_READ_ONLY)) {
             preparedStatement.setString(1, userName);
-            preparedStatement.setString(2, password);
+            
 
             try (ResultSet rs = preparedStatement.executeQuery()) {
                 if (rs.next()) {
@@ -42,6 +42,37 @@ public class MemberDao {
 
         return member;
     }
+    
+    public boolean updateRewardPoint(int userId, int newRewardPoint) {
+        Connection connection = JDBCConnection.getJDBCConnection();
+        boolean updateSuccess = false;
+
+        String sql = "UPDATE member SET reward_point = ? WHERE id = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, newRewardPoint);
+            preparedStatement.setInt(2, userId);
+
+            int affectedRows = preparedStatement.executeUpdate();
+            updateSuccess = (affectedRows > 0);
+
+            String actualSql = preparedStatement.toString().split(": ")[1];
+            logForUpdateRewardPoint(actualSql, newRewardPoint, userId);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+    return updateSuccess;
+}
 
     private void logForMemberQuery(String sql, ResultSet rs, String typeRequest) throws SQLException {
         int rowResult = 0;
@@ -53,6 +84,11 @@ public class MemberDao {
         System.out.println("\n(+)  " + typeRequest + " success!");
         System.out.println("(+)  Number of rows returned: " + rowResult);
         System.out.println("(+)  Query:\n" + sql);
+    }
+    
+    private void logForUpdateRewardPoint(String sql, int newRewardPoint, int userId) {
+        // Implement your logging logic here
+        System.out.println("SQL: " + sql + " | New Reward Point: " + newRewardPoint + " | User ID: " + userId);
     }
 
     private Member mapResultSetToMember(ResultSet rs) throws SQLException {

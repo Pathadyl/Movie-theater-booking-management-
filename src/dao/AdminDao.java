@@ -36,18 +36,17 @@ public class AdminDao {
         return admins;
     }
 
-    public Admin getAuthenticated(String userName, String password) {
+    public Admin findByUsername(String userName) {
         Connection connection = JDBCConnection.getJDBCConnection();
         Admin admin = null;
 
         String sql = "SELECT * FROM admin " +
-                     "WHERE user_name = ? AND password = ?";
+                     "WHERE user_name = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql,
                                                                                ResultSet.TYPE_SCROLL_INSENSITIVE,
                                                                                ResultSet.CONCUR_READ_ONLY)) {
             preparedStatement.setString(1, userName);
-            preparedStatement.setString(2, password);
 
             try (ResultSet rs = preparedStatement.executeQuery()) {
                 if (rs.next()) {

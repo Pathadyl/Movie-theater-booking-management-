@@ -159,7 +159,8 @@ public class TestButton extends JButton {
         g.drawImage(img, 0, 0, null);
 
         // Custom text drawing to handle multiple lines
-        drawMultilineText(g);
+//        drawMultilineText(g);
+        drawMultilineTextWithIcon(g);
     }
 
     private void paintPressed(Graphics2D g2) {
@@ -177,8 +178,29 @@ public class TestButton extends JButton {
         g2.fillOval((int) x, (int) y, (int) pressedSize, (int) pressedSize);
     }
 
-    private void drawMultilineText(Graphics g) {
+//    private void drawMultilineText(Graphics g) {
+//        String text = getText();
+//        if (text != null && !text.isEmpty()) {
+//            Graphics2D g2d = (Graphics2D) g;
+//            g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+//            g2d.setFont(getFont());
+//            g2d.setColor(getForeground());
+//            Font font = g2d.getFontMetrics().getFont();
+//            int lineHeight = g2d.getFontMetrics(font).getHeight();
+//            int y = getInsets().top + lineHeight; // Start drawing from the top, accounting for insets
+//
+//            String[] lines = text.split("\n");
+//            for (String line : lines) {
+//                int x = getInsets().left;
+//                g2d.drawString(line, x, y);
+//                y += lineHeight;
+//            }
+//        }
+//    }
+    
+    private void drawMultilineTextWithIcon(Graphics g) {
         String text = getText();
+        Icon leftIcon = getIcon();
         if (text != null && !text.isEmpty()) {
             Graphics2D g2d = (Graphics2D) g;
             g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -186,17 +208,33 @@ public class TestButton extends JButton {
             g2d.setColor(getForeground());
             Font font = g2d.getFontMetrics().getFont();
             int lineHeight = g2d.getFontMetrics(font).getHeight();
+//            int extraGap = 2;
             int y = getInsets().top + lineHeight; // Start drawing from the top, accounting for insets
 
             String[] lines = text.split("\n");
-            for (String line : lines) {
+            for (int i = 0; i < lines.length; i++) {
+                String line = lines[i];
                 int x = getInsets().left;
+                
+//                if (i == 1) {
+//                    y += extraGap;
+//                }
+                // Draw the left icon at the beginning of the second line
+                if (i == 1 && leftIcon != null) {
+                    int iconWidth = leftIcon.getIconWidth();
+                    int iconHeight = leftIcon.getIconHeight();
+                    int iconY = y - lineHeight + 5; // Adjust the iconY to align with the second line
+                    leftIcon.paintIcon(this, g2d, x, iconY);
+                    x += iconWidth + 5; // Adjust the x position for the text after the icon
+//                    y += iconHeight;
+                }
+
                 g2d.drawString(line, x, y);
-                y += lineHeight;
+                y += lineHeight + 3;
             }
         }
     }
-
+    
     private static class TopBottomBorder implements Border {
         @Override
         public void paintBorder(java.awt.Component c, Graphics g, int x, int y, int width, int height) {

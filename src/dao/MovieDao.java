@@ -1,6 +1,5 @@
 package dao;
 
-import model.Admin;
 import model.Role;
 import model.Movie;
 
@@ -12,7 +11,45 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MovieDao {
+    
+    public List<Movie> getAllMovies() {
+        List<Movie> movies = new ArrayList<>();
 
+        Connection connection = JDBCConnection.getJDBCConnection();
+
+        String sql = "SELECT * FROM movie";
+        
+        
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql,
+                                                                               ResultSet.TYPE_SCROLL_INSENSITIVE,
+                                                                               ResultSet.CONCUR_READ_ONLY)) {
+           
+            
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while(rs.next()) {
+                movies.add(mapResultSetToMovie(rs));
+            }
+
+            logForMovieQuery(sql, rs, "Get all movies");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return movies;
+    }
+    
+    
 // ==================================== Get Movie List Given Condition ===============================================
     public Movie getMovieById(int movieId) {
         Connection connection = JDBCConnection.getJDBCConnection();
@@ -52,7 +89,7 @@ public class MovieDao {
         return movie;
     }
 
-    public List<Movie> getAllMovies(Role role, boolean available) {
+    public List<Movie> getMoviesByAvailability(Role role, boolean available) {
         List<Movie> movies = new ArrayList<>();
 
         Connection connection = JDBCConnection.getJDBCConnection();
@@ -73,8 +110,9 @@ public class MovieDao {
             while(rs.next()) {
                 movies.add(mapResultSetToMovie(rs));
             }
-
-            logForMovieQuery(sql, rs, "Get all movies");
+            
+            String actualSql = preparedStatement.toString().split(": ")[1];
+            logForMovieQuery(actualSql, rs, "Get all movies");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -340,14 +378,14 @@ public class MovieDao {
         return flag;
     }
 
-    public void editMovieFromDB(int id, String title, String description,                   // Edit movie function, when getting the data from UI,
+    public boolean editMovieFromDB(int id, String title, String description,                   // Edit movie function, when getting the data from UI,
                                 String director, String genre, String duration,             // pass the value into this function
-                                double price, String posterPath, String coverPath,
+                                double price, String posterPath, String coverPath,                   // I have removed poster_path for testing
                                 boolean visibility, boolean availability) {
         Connection connection =JDBCConnection.getJDBCConnection();
-
+        boolean flag = false;
         String sql = "UPDATE movie " +
-                     "SET title = ?, description = ?, director = ?, genre = ?, duration = ?, price = ?, visibility = ?, availability ? " +
+                     "SET title = ?, description = ?, director = ?, genre = ?, duration = ?, price = ?,poster_path = ?, cover_path = ?, visibility = ?, availability = ? " +
                      "WHERE id = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -367,7 +405,7 @@ public class MovieDao {
 
             String actualSql = preparedStatement.toString().split(": ")[1];
             logForMovieQuery(actualSql, rs, "Edit movie from database");
-
+            if (rs > 0) flag = true;
         } catch (SQLException e) {
             e.printStackTrace();
 
@@ -380,8 +418,8 @@ public class MovieDao {
                 }
             }
         }
+        return flag;
     }
-
 // ==================================== Modify Movie In Theater ======================================================
     public void addMovieToTheater(int theaterId, int movieId) {
         Connection connection = JDBCConnection.getJDBCConnection();

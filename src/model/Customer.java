@@ -1,15 +1,11 @@
 package model;
 
-import java.sql.Date;
-import java.util.List;
-import java.util.Map;
 
 public abstract class Customer extends User{
     private String name;
     private String phone;
     private String email;
-    private Map<Movie, Integer> cart;
-//    private List<Bill> billList;
+
     
     
     public Customer() {
@@ -46,7 +42,5 @@ public abstract class Customer extends User{
     public void setEmail(String email) {
         this.email = email;
     }
-//    public List<Bill> getBillList() {
-//        return billList;
-//    }
+    
 }

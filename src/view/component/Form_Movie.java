@@ -3,14 +3,17 @@ package view.component;
 import java.awt.Dimension;
 import javax.swing.ImageIcon;
 import model.Movie;
+import view.CustomerFrame;
+import view.InformationBookingFrame;
 import view.customSwing.CustomButtonWithPressEffect;
 import view.customSwing.PicturePoster;
 
 public class Form_Movie extends javax.swing.JPanel {
     
     private Movie movie;
+    private CustomerFrame frame;
     
-    public Form_Movie(Movie movie) {
+    public Form_Movie(CustomerFrame frame, Movie movie) {
         initComponents();
         setOpaque(false);
         setPreferredSize(new Dimension(225, 377));
@@ -18,6 +21,7 @@ public class Form_Movie extends javax.swing.JPanel {
         setMinimumSize(new Dimension(225, 377));
         
         this.movie = movie;
+        this.frame = frame;
         setData();
     }
     
@@ -63,6 +67,11 @@ public class Form_Movie extends javax.swing.JPanel {
         bookingButton.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         bookingButton.setPaintedColor(new java.awt.Color(0, 255, 0));
         bookingButton.setSizeSpeed(10.0F);
+        bookingButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bookingButtonActionPerformed(evt);
+            }
+        });
 
         movieNameLabel.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
         movieNameLabel.setForeground(new java.awt.Color(255, 255, 255));
@@ -107,6 +116,12 @@ public class Form_Movie extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void bookingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookingButtonActionPerformed
+        InformationBookingFrame infomationBookingFrame = new InformationBookingFrame(movie, frame.getUserService());
+        infomationBookingFrame.setVisible(true);
+        frame.dispose();
+    }//GEN-LAST:event_bookingButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

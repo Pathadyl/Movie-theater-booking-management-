@@ -74,6 +74,9 @@
         </Property>
         <Property name="sizeSpeed" type="float" value="10.0"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bookingButtonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="movieNameLabel">
       <Properties>

@@ -27,9 +27,9 @@ public class PictureAvatar extends JComponent {
     
     public PictureAvatar(Icon image) {
         setOpaque(false);
-        setPreferredSize(new Dimension(225, 325));
-        setMaximumSize(new Dimension(225, 325));
-        setMinimumSize(new Dimension(225, 325));
+        setPreferredSize(new Dimension(150, 150));
+        setMaximumSize(new Dimension(150, 150));
+        setMinimumSize(new Dimension(150, 150));
         setImage(image);
     }
 
